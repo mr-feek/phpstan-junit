@@ -12,8 +12,5 @@
 	},
 	"autoload": {
 		"psr-4": {"Mavimo\\PHPStan\\ErrorFormatter\\": "src/"}
-	},
-    "autoload-dev": {
-        "classmap": ["tests", "vendor/phpstan/phpstan/tests/PHPStan"]
-    }
+	}
 }

@@ -6,16 +6,13 @@ namespace Mavimo\PHPStan\ErrorFormatter;
 
 use DOMDocument;
 use DomElement;
-use PHPStan\Analyser\Error;
 use PHPStan\Command\AnalysisResult;
 use PHPStan\Command\ErrorFormatter\ErrorFormatter;
-use PHPStan\Command\ErrorFormatter\RelativePathHelper;
 use Symfony\Component\Console\Formatter\OutputFormatter;
 use Symfony\Component\Console\Style\OutputStyle;
 
 class JunitErrorFormatter implements ErrorFormatter
 {
-
     public function formatErrors(
         AnalysisResult $analysisResult,
         OutputStyle $style
@@ -60,7 +57,7 @@ class JunitErrorFormatter implements ErrorFormatter
             $totalErrors = 0;
             foreach ($fileErrors as $file => $errors) {
                 foreach ($errors as $error) {
-                    $fileName = RelativePathHelper::getRelativePath($currentDirectory, $file);
+                    $fileName = self::getRelativePath($currentDirectory, $file);
                     $this->createTestCase($dom, $testsuite, sprintf('%s:%s', $fileName, (string) $error->getLine()), $error->getMessage());
 
                     $totalErrors++;
@@ -99,5 +96,17 @@ class JunitErrorFormatter implements ErrorFormatter
         $testcase->appendChild($failure);
 
         $testsuite->appendChild($testcase);
+    }
+
+    /**
+     * @see PHPStan\Command\ErrorFormatter\RelativePathHelper which does not exist in 0.9
+     */
+    private static function getRelativePath(string $currentDirectory, string $filename): string
+    {
+        if ($currentDirectory !== '' && strpos($filename, $currentDirectory) === 0) {
+            return substr($filename, strlen($currentDirectory) + 1);
+        }
+
+        return $filename;
     }
 }
