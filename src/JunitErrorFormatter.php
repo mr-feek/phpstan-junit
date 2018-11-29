@@ -82,7 +82,7 @@ class JunitErrorFormatter implements ErrorFormatter
         return $returnCode;
     }
 
-    private function createTestCase(DOMDocument $dom, DomElement $testsuite, string $reference, ?string $message)
+    private function createTestCase(DOMDocument $dom, DomElement $testsuite, string $reference, string $message = null)
     {
         $testcase = $dom->createElement('testcase');
         $testcase->setAttribute('name', $reference);
